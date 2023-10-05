@@ -1,0 +1,16 @@
+
+/* SOTPET - Simple One-Trick Pony Encryption Tool */
+
+#include <stdint.h>
+
+#include "whirlpool.h"
+#include "sotpet_trailer.h"
+
+
+/* magic2 intentionally first */
+const uint8_t sotpet_magic2_plain[] = { 0x6e, 0x02, 0x10, 0xab };
+const uint8_t sotpet_magic2_enc[] = { 0x7e, 0x27, 0xf4, 0xa2 };
+
+const uint8_t sotpet_magic_plain[] = { 0xfe, 0xaf, 0x0f, 0xc1, 0xd1, 0x2e, 0x93, 0x37 };
+const uint8_t sotpet_magic_enc[] = { 0xf2, 0x2f, 0x1e, 0xef, 0x59, 0xfa, 0x26, 0xa7 };
+

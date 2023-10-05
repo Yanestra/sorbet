@@ -1,0 +1,60 @@
+include ver.mak
+include byteorder.mak
+
+CFLAGS=-Wall -O2 -pipe -Icamellia-BSD -Iwhirlpool -Icompat -I. -pthread -DDEBUG=0 -DBSD=1 -DSOTPET_VERSION="\"$(VERSION)\"" -DBYTEORDER="'$(BYTEORDER)'"
+#CFLAGS=-Wall -g -pipe -Icamellia-BSD -Iwhirlpool -Icompat -I. -pthread -DDEBUG=0 -DBSD=1 -DSOTPET_VERSION="\"$(VERSION)\"" -DBYTEORDER="'$(BYTEORDER)'"
+CFLAGS_NDEB=-Wall -O2 -pipe -Icamellia-BSD -Iwhirlpool -Icompat -I. -pthread -DNDEBUG=1 -DDEBUG=0 -DBSD=1 -DSOTPET_VERSION="\"$(VERSION)\"" -DBYTEORDER="'$(BYTEORDER)'"
+CXXFLAGS=$(CFLAGS)
+CXXFLAGS_NDEB=$(CFLAGS)
+LDFLAGS=-g -pthread
+LDLIBS=-lpthread -lrt
+
+OBJS = whirlpool.o camellia.o buftools.o octword.o sotpet_trailer.o sotpet_main.o sotpet.o sotpet_level2.o fifo.o bsdfun.o shm.o
+
+MAIN = sorbet
+
+#.c.o:
+
+$(MAIN): $(OBJS)
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(MAIN) $(OBJS)
+
+# whirlpool gets broken when compiled with -Og and with NDEBUG set, -O2 is ok.
+
+whirlpool.o: whirlpool/whirlpool.c whirlpool/whirlpool.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+camellia.o: camellia-BSD/camellia.c camellia-BSD/camellia.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+octword.o: octword.cpp octword.hpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+fifo.o: fifo.cpp fifo.hpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+buftools.o: compat/buftools.c compat/buftools.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+sotpet_trailer.o: sotpet_trailer.c sotpet_trailer.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+sotpet_main.o: sotpet_main.c
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+sotpet_level2.o: sotpet_level2.cpp sotpet_level2.hpp compat/endianess.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+bsdfun.o: compat/bsdfun.c compat/bsdfun.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+shm.o: compat/shm.cpp compat/shm.hpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+.c.o:
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+
+clean:
+	rm -f *.o $(MAIN) tmp_* core
+
+

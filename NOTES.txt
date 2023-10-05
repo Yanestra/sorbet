@@ -1,0 +1,12 @@
+
+SOTPET - Simple One-Trick Pony Encryption Tool
+SORBET - Simple One-Ruse Bronco Encryption Tool
+
+CBC(ESSIV) / Camellia 256
+
+E  (I) => IV
+ k2
+
+for the use with piping, the only mode supported is stream2stream
+
+no header, simple trailer (if requested)

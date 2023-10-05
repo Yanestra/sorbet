@@ -1,0 +1,2 @@
+
+short getcpus(void);
